@@ -10,6 +10,8 @@ namespace ImagingService.Configuration
         public string ProcessedPath { get; set; }
         public string SourceFilesSearchPattern { get; set; }
         public string ImageProcessorType { get; set; }
+        public bool CopyImagesToProcessedFolder { get; set; }
+        public bool DeleteProcessedImages { get; set; }
         public List<ImageVariantProperties> ImageVariants { get; set; }
     }
 }

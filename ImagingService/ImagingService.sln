@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagingService", "ImagingService\ImagingService.csproj", "{17BD2D1B-A1EA-490A-ACB2-0BF989B05E9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imagingservice.Tests", "Imagingservice.Tests\Imagingservice.Tests.csproj", "{3C6E7650-253F-4E5A-AFC8-8A28E7A15A60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagingService.Tests.Integration", "Imagingservice.Tests.Integration\ImagingService.Tests.Integration.csproj", "{3C6E7650-253F-4E5A-AFC8-8A28E7A15A60}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagingService.ConsoleApplication", "ImagingService.ConsoleApplication\ImagingService.ConsoleApplication.csproj", "{864BC3BA-A01D-4877-A109-24AC0935CFFF}"
 EndProject

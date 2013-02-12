@@ -16,10 +16,13 @@ namespace ImagingService.ImageProcessing
 
         public abstract bool ProcessImage();
 
-        protected static void MoveImageToProcessedFolder(string sourceImagePath, string processedPath)
+        protected void MoveImageToProcessedFolder(string sourceImagePath, string processedPath)
         {
-            File.Copy(sourceImagePath, string.Format("{0}\\{1}", processedPath, Path.GetFileName(sourceImagePath)), true);
-            File.Delete(sourceImagePath);
+            if (ClientConfiguration.CopyImagesToProcessedFolder)
+                File.Copy(sourceImagePath, string.Format("{0}\\{1}", processedPath, Path.GetFileName(sourceImagePath)), true);
+            
+            if (ClientConfiguration.DeleteProcessedImages)
+                File.Delete(sourceImagePath);
         }
     }
 }
