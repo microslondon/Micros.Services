@@ -1,35 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-
+using ImagingService.Configuration;
+using ImagingService.ImageProcessing;
 
 namespace ImagingService
 {
     public class FileProcessor
     {
-        public string SourcePath { get; set; }
-        public string DestinationPath { get; set; }
-        public string ProcessedPath { get; set; }
+        public ClientConfiguration ClientConfiguration { get; set; }
 
-        public FileProcessor (string sourcePath, string destinationPath, string processedPath)
+        public FileProcessor(ClientConfiguration clientConfiguration)
         {
-            SourcePath = sourcePath;
-            DestinationPath = destinationPath;
-            ProcessedPath = processedPath;
+            ClientConfiguration = clientConfiguration;
         }
 
-        public void Process ()
+        public int Process ()
         {
-            var imageProcessors = LoadImageProcessors(SourcePath, DestinationPath, ProcessedPath);
-            imageProcessors.AsParallel().ForAll(processor => processor.ProcessImage());
+            var imageProcessors = LoadImageProcessors(ClientConfiguration);
+            return imageProcessors.AsParallel().Count(processor => processor.ProcessImage());
         }
 
-        public static List<ImageProcessor> LoadImageProcessors(string sourcePath, string destinationPath, string processedPath)
+        public static IEnumerable<IImageProcessor> LoadImageProcessors(ClientConfiguration clientConfiguration)
         {
-            var files = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
-            return files.Select(file =>new ImageProcessor(ImageFromFile(file), file, CreateTestVariants(), destinationPath, processedPath)).ToList();
+            var imageProcessorType = Type.GetType(clientConfiguration.ImageProcessorType);
+
+            if (imageProcessorType == null)
+                return new List<IImageProcessor>();
+
+            var files = Directory.GetFiles(clientConfiguration.SourcePath, clientConfiguration.SourceFilesSearchPattern, SearchOption.AllDirectories);
+            
+            Trace.WriteLine(string.Format("{0} files found", files.Count()));
+            
+            return files.Select(filePath => CreateImageProcessor(filePath, imageProcessorType, clientConfiguration));
         }
 
         private static Image ImageFromFile(string file)
@@ -39,71 +45,23 @@ namespace ImagingService
                 var image = Image.FromStream(new MemoryStream(File.ReadAllBytes(file)));
                 return image.Width > 0 && image.Height > 0 ? image : null;
             }
-            catch
+            catch (Exception ex)
             {
-                // TO Do: Logging File is invalid / incomplete
+                Trace.TraceError("Unable to parse an image from file: {0}, exception: {1}", file, ex);
             }
 
             return null;
         }
 
-        private static List<ImageVariantProperties> CreateTestVariants()
+        private static IImageProcessor CreateImageProcessor (string filePath, Type imageProcessorType, ClientConfiguration clientConfiguration)
         {
-            return new List<ImageVariantProperties>
-                       {
-                           new ImageVariantProperties
-                               {
-                                   Description = "Variant 1",
-                                   Height = 50,
-                                   Width = 50,
-                                   NameAddition = "_p",
-                                   ReplacementColour = -1,
-                                   ScaleBy = ScaleBy.Width,
-                                   TargetFormat = "jpg"
-                               },
-                           new ImageVariantProperties
-                               {
-                                   Description = "Variant 2",
-                                   Height = 100,
-                                   Width = 100,
-                                   NameAddition = "_r",
-                                   ReplacementColour = -1,
-                                   ScaleBy = ScaleBy.Width,
-                                   TargetFormat = "jpg"
-                               },
-                           new ImageVariantProperties
-                               {
-                                   Description = "Variant 3",
-                                   Height = 200,
-                                   Width = 200,
-                                   NameAddition = "_s",
-                                   ReplacementColour = -1,
-                                   ScaleBy = ScaleBy.Width,
-                                   TargetFormat = "jpg"
-                               },
-                           new ImageVariantProperties
-                               {
-                                   Description = "Variant 4",
-                                   Height = 400,
-                                   Width = 400,
-                                   NameAddition = "_t",
-                                   ReplacementColour = -1,
-                                   ScaleBy = ScaleBy.Width,
-                                   TargetFormat = "jpg"
-                               },
-                           new ImageVariantProperties
-                               {
-                                   Description = "Variant 5",
-                                   Height = 800,
-                                   Width = 800,
-                                   NameAddition = "_u",
-                                   ReplacementColour = -1,
-                                   ScaleBy = ScaleBy.Width,
-                                   TargetFormat = "jpg"
-                               }
-                       };
+            var imageProcessor = (IImageProcessor)Activator.CreateInstance(imageProcessorType);
 
+            imageProcessor.SourceImageFilePath = filePath;
+            imageProcessor.SourceImage = ImageFromFile(filePath);
+            imageProcessor.ClientConfiguration = clientConfiguration;
+
+            return imageProcessor;
         }
-
     }
 }

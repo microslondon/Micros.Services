@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿
+using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
+using ImagingService.Configuration;
 
 namespace ImagingService.ConsoleApplication
 {
@@ -12,16 +10,44 @@ namespace ImagingService.ConsoleApplication
     {
         static void Main(string[] args)
         {
-            var sourcePath = "C:\\temp\\imagingservice\\source";
-            var destinationPath = "C:\\temp\\imagingservice\\destination";
-            var processedPath = "C:\\temp\\imagingservice\\processed";
+            log4net.Config.XmlConfigurator.Configure();
 
-            var fileProcessor = new FileProcessor(sourcePath, destinationPath, processedPath);
+            Trace.WriteLine(string.Format("Begin processing ..."));
 
-            fileProcessor.Process();
+            var clientConfiguration = LoadConfigurationFromXml("clientConfiguration.config");
+        
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            var processedFilesCount = 0;
+
+            try
+            {
+                processedFilesCount = new FileProcessor(clientConfiguration).Process();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("Exception occured during processing: {0}", ex.Message);
+            }
+
+            stopwatch.Stop();
+
+            var elapsed = stopwatch.Elapsed;
+            var elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds, elapsed.Milliseconds / 10);
+            Trace.WriteLine(string.Format("Finished processing - {0} files successfully processed in {1}", processedFilesCount, elapsedTime));
 
         }
 
-       
+        private static ClientConfiguration LoadConfigurationFromXml (string path)
+        {
+            ClientConfiguration configuration;
+
+            var serializer = new System.Xml.Serialization.XmlSerializer(typeof(ClientConfiguration));
+            using (var reader = new StreamReader(path))
+                configuration = (ClientConfiguration) serializer.Deserialize(reader);
+
+            return configuration;
+        }
     }
 }

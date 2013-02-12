@@ -1,69 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ImagingService.Configuration;
 using Color = System.Drawing.Color;
 using Size = System.Drawing.Size;
 
-namespace ImagingService
+namespace ImagingService.ImageProcessing
 {
-    public class ImageProcessor
+    public class WpfImageProcessor : ImageProcessorBase
     {
         private const double Epsilon = 0.00001;
-        private const string FileNameFormat = "{0}\\{1}{2}.{3}";
-        private const string FilePathFormat = "{0}\\{1}\\{2}\\{3}";
+     
+        public WpfImageProcessor ()
+        {
+        }
 
-        public string DestinationPath { get; set; }
-        public string ProcessedPath { get; set; }
-        public Image SourceImage { get; set; }
-        public string SourceImagePath { get; set; }
-        public string SourceImageFileName { get; set; }
-        public IEnumerable<ImageVariantProperties> ImageVariants { get; set; }
-
-        public ImageProcessor(Image sourceImage, string sourceImagePath, IEnumerable<ImageVariantProperties> imageVariants, string destinationPath, string processedPath)
+        public WpfImageProcessor(Image sourceImage, string sourceImagePath, ClientConfiguration clientConfiguration)
         {
             SourceImage = sourceImage;
-            SourceImagePath = sourceImagePath;
-            ImageVariants = imageVariants;
-            DestinationPath = destinationPath;
-            ProcessedPath = processedPath;
-
-            SourceImageFileName = Path.GetFileNameWithoutExtension(SourceImagePath);
+            SourceImageFilePath = sourceImagePath;
+            ClientConfiguration = clientConfiguration;
         }
 
-        public void ProcessImage()
+        public override bool ProcessImage()
         {
-            if (SourceImage == null)
-                return;
-
-            if (SourceImageFileName == null)
-                return;
-
-            // Transparent colour replacement is unlikely to differ between image variants. So for efficiency we are processing it once.
-            var sourceImageBytes = ConvertImageToByteArray(SourceImage, ImageVariants.First().ReplacementColour);
-
-            var filePath = string.Format(FilePathFormat, DestinationPath, SourceImageFileName[0], SourceImageFileName[1], SourceImageFileName[2]);
-            Directory.CreateDirectory(filePath);
-
-            foreach (var imageVariant in ImageVariants)
+            try
             {
-                var processedImageBytes = ResizeAndCrop(sourceImageBytes, SourceImage.RawFormat.ToString().ToLower(), SourceImage.Size, imageVariant);
-                WriteImageToDisk(processedImageBytes, filePath, SourceImageFileName, imageVariant);
+                var sourceImageFileName = Path.GetFileNameWithoutExtension(SourceImageFilePath);
+
+                if (SourceImage == null || sourceImageFileName == null)
+                    return false;
+            
+                // Transparent colour replacement is unlikely to differ between image variants. So for efficiency we are processing it once.
+                var sourceImageBytes = ConvertImageToByteArray(SourceImage, ClientConfiguration.ImageVariants.First().ReplacementColour);
+
+                var filePath = string.Format(FilePathFormat, ClientConfiguration.DestinationPath, sourceImageFileName[0], sourceImageFileName[1], sourceImageFileName[2]);
+                Directory.CreateDirectory(filePath);
+
+                foreach (var imageVariant in ClientConfiguration.ImageVariants)
+                {
+                    var processedImageBytes = ResizeAndCrop(sourceImageBytes, SourceImage.RawFormat.ToString().ToLower(), SourceImage.Size, imageVariant);
+                    WriteImageToDisk(processedImageBytes, filePath, sourceImageFileName, imageVariant);
+                }
+
+                SourceImage.Dispose();
+                MoveImageToProcessedFolder(SourceImageFilePath, ClientConfiguration.ProcessedPath);
+            }
+            catch (Exception  ex)
+            {
+                Trace.TraceError("{0}: Unable to process image {1}, exception: {2} ", GetType(), SourceImageFilePath, ex.Message);
+                return false;
             }
 
-            SourceImage = null;
-
-            MoveImageToProcessedFolder(SourceImagePath, ProcessedPath);
-        }
-
-        private static void MoveImageToProcessedFolder (string sourceImagePath, string processedPath)
-        {
-            File.Copy(sourceImagePath, string.Format("{0}\\{1}", processedPath, Path.GetFileName(sourceImagePath)), true);
-            File.Delete(sourceImagePath);
+            return true;
         }
 
         private static void WriteImageToDisk(byte[] processedImageBytes, string destinationPath, string sourceImageFileName, ImageVariantProperties imageVariant)

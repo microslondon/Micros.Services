@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Cavity.Diagnostics.Log4Net.Console</id>
+    <version>1.1.0.804</version>
+    <title>Cavity log4net trace listener for Console Applications</title>
+    <authors>Alan Dean</authors>
+    <owners>Alan Dean</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>http://code.google.com/p/cavity/</projectUrl>
+    <iconUrl>http://www.alan-dean.com/nuget.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A trace listener for log4net, allowing provider-agnostic tracing in console applications.</description>
+    <releaseNotes />
+    <copyright>Copyright © 2010 - 2012 Alan Dean</copyright>
+    <tags>Diagnostics</tags>
+    <dependencies>
+      <dependency id="log4net" version="2.0.0" />
+    </dependencies>
+    <references>
+      <reference file="Cavity.Diagnostics.Log4Net.dll" />
+    </references>
+  </metadata>
+</package>

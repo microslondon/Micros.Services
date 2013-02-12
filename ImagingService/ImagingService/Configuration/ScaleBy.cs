@@ -1,5 +1,5 @@
 ﻿
-namespace ImagingService
+namespace ImagingService.Configuration
 {
     public enum ScaleBy
     {
