@@ -3,7 +3,7 @@
 
   <Target Name="Compile">
     <MSBuild
-      Projects="$(CodePath)\Orchard.sln"
+      Projects="$(CodePath)\ImagingService.sln"
       Properties="Configuration=Release" />
   </Target>
 
