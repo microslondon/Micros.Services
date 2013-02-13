@@ -5,7 +5,7 @@
 		<BuildCommonPath>$(MSBuildProjectDirectory)</BuildCommonPath>
 		<BuildPath>$(BuildCommonPath)\..</BuildPath>
 		<ToolsPath>$(BuildCommonPath)\Tools</ToolsPath>
-		<CodePath>$(BuildPath)</CodePath>
+		<CodePath>$(BuildPath)\ImagingService</CodePath>
 		<WebCodePath>$(CodePath)\Orchard.Web</WebCodePath>
 		<MSBuildCommunityTasksPath>$(ToolsPath)\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
 	</PropertyGroup>
