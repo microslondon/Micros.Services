@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="$(ToolsPath)\xUnit\xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit" />
+  <PropertyGroup>
+	<NUnit>$(ToolsPath)\nunit</NUnit>
+  </PropertyGroup>
+  
+  <Target Name="UnitTest" DependsOnTargets="Compile">
+    <CallTarget Targets="xUnit;nUnit" />
+  </Target>
+  
+  <Target Name="xUnit">
+	<ItemGroup>
+	  <XUnitAssemblies Include="$(CodePath)\**\bin\Release\xunit.dll" />
+      <XUnitTestFiles Include="%(XUnitAssemblies.RootDir)%(XUnitAssemblies.Directory)\$(ProjectPrefix).*.Tests.dll" />
+    </ItemGroup>
+
+    <Message Text="Running xUnit tests for @(XUnitTestFiles)" />
+    <xunit Assemblies="@(XUnitTestFiles)" Condition="'@(XUnitTestFiles)' !=''" />
+  </Target>
+  
+  <Target Name="nUnit">
+	<ItemGroup>
+	  <NUnitAssemblies Include="$(CodePath)\**\bin\Release\nunit.dll" />
+      <NUnitTestFiles Include="%(NUnitAssemblies.RootDir)%(NUnitAssemblies.Directory)\$(ProjectPrefix).*.Tests.dll" />
+    </ItemGroup>
+
+    <Message Text="Running nUnit tests for @(NUnitTestFiles)" />
+    <NUnit ToolPath="$(NUnit)" Assemblies="@(NUnitTestFiles)" Condition="'@(NUnitTestFiles)' !=''" />
+  </Target>
+
+</Project>

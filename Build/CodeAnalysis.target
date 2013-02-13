@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<UsingTask AssemblyFile="$(ToolsPath)\StyleCop 4.7\StyleCop.dll" TaskName="StyleCopTask"/>
+
+	<Target Name="CodeAnalysis">
+		<ItemGroup>
+			<FilesToAnalyse Include="$(WebCodePath)\Modules\$(ProjectPrefix)*\**\*.cs" Exclude="$(WebCodePath)\Modules\Micros*\**\AssemblyInfo.cs;$(WebCodePath)\Modules\Micros*\**\*.Designer.cs"/>
+			<FilesToAnalyse Include="$(WebCodePath)\Themes\$(ProjectPrefix)*\**\*.cs" Exclude="$(WebCodePath)\Modules\Micros*\**\AssemblyInfo.cs;$(WebCodePath)\Modules\Micros*\**\*.Designer.cs"/>
+			<FilesToAnalyse Include="$(CodePath)\$(ProjectPrefix).Tests\**\*.cs" Exclude="$(WebCodePath)\Modules\Micros*\**\AssemblyInfo.cs;$(WebCodePath)\Modules\Micros*\**\*.Designer.cs"/>
+		</ItemGroup>
+		
+		<StyleCopTask
+			ProjectFullPath="$(MSBuildProjectFile)"
+			SourceFiles="@(FilesToAnalyse)"
+			ForceFullAnalysis="true"
+			TreatErrorsAsWarnings="true"
+			OutputFile="StyleCopReport.xml"
+			CacheResults="true" />
+			
+		<XmlRead XPath="count(//Violation)" XmlFileName="StyleCopReport.xml">
+			<Output TaskParameter="Value" PropertyName="StyleCopViolations" />
+	    </XmlRead>
+
+		<Warning Condition="$(StyleCopViolations) > 0" Text="StyleCop found $(StyleCopViolations) broken rules!" />
+	</Target>
+</Project>
