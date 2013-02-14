@@ -16,5 +16,5 @@
 	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(DeployPath)\%(RecursiveDir)" />	
 	
   </Target>
-  
+   
 </Project>
