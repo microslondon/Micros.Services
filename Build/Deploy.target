@@ -4,7 +4,7 @@
   <Target Name="Deploy">  
   
 	<PropertyGroup>
-      <DeployPath>\\$(DeployServer)\Micros.Services\</DeployPath>	  
+      <DeployPath>\\$(DeployServer)\Micros.Services</DeployPath>	  
     </PropertyGroup>
 	
 	<ItemGroup>
