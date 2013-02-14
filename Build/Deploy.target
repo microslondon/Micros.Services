@@ -12,7 +12,7 @@
 	</ItemGroup>
 	
 	
-	<RemoveDir Directories="$(DeployPath)" />
+	
 	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(DeployPath)\%(RecursiveDir)" />	
 	
   </Target>
