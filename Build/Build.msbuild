@@ -6,7 +6,6 @@
 		<BuildPath>$(BuildCommonPath)\..</BuildPath>
 		<ToolsPath>$(BuildCommonPath)\Tools</ToolsPath>
 		<CodePath>$(BuildPath)\ImagingService</CodePath>
-		<WebCodePath>$(CodePath)\Orchard.Web</WebCodePath>
 		<MSBuildCommunityTasksPath>$(ToolsPath)\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
 	</PropertyGroup>
 	
@@ -17,6 +16,10 @@
 
 	<Target Name="ImagingServiceContinuousDevelopment">
 		<CallTarget Targets="CodeAnalysis;Compile;UnitTest" />
+	</Target>
+	
+	<Target Name="ImagingServiceDeployDevelopment">
+		<CallTarget Targets="Compile;Deploy" />
 	</Target>
 	
 </Project>

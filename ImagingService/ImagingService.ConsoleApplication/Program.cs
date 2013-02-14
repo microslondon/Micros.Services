@@ -35,8 +35,7 @@ namespace ImagingService.ConsoleApplication
 
             var elapsed = stopwatch.Elapsed;
             var elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", elapsed.Hours, elapsed.Minutes, elapsed.Seconds, elapsed.Milliseconds / 10);
-            Trace.WriteLine(string.Format("Finished processing - {0} files successfully processed in {1}", processedFilesCount, elapsedTime));
-
+            Trace.WriteLine(string.Format("Finished processing - {0} files successfully processed in {1} hh:mm:ss:ms", processedFilesCount, elapsedTime));
         }
 
         private static ClientConfiguration LoadConfigurationFromXml (string path)

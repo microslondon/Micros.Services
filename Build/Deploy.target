@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="Deploy">  
+  
+	<PropertyGroup>
+      <DeployPath>\\$(DeployServer)\Micros.Services\</DeployPath>	  
+    </PropertyGroup>
+	
+	<ItemGroup>
+		<AppCode Include="$(CodePath)\**\*.*" />
+	</ItemGroup>
+	
+	
+	<RemoveDir Directories="$(CodePath)" />
+	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(CodePath)\%(RecursiveDir)" />	
+	
+  </Target>
+  
+</Project>

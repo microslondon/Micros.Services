@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ClientConfiguration.cs" />
     <Compile Include="ImageProcessing\ImageProcessorBase.cs" />
+    <Compile Include="ImageProcessing\LegacyImagingProcessor.cs" />
     <Compile Include="ImageProcessing\WpfImageProcessor.cs" />
     <Compile Include="ImageProcessing\IImageProcessor.cs" />
     <Compile Include="ImageProcessing\ImageResizerImageProcessor.cs" />

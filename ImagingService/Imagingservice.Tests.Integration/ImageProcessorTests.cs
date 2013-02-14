@@ -10,6 +10,7 @@ namespace Imagingservice.Tests
     {
         private const string WpfImageProcessorType = "ImagingService.ImageProcessing.WpfImageProcessor, ImagingService";
         private const string ImageResizerImageProcessorType = "ImagingService.ImageProcessing.ImageResizerImageProcessor, ImagingService";
+        private const string LegacyImagingProcessorType = "ImagingService.ImageProcessing.LegacyImagingProcessor, ImagingService";
 
         [Fact]
         public void SuccessfullyProcessLargeFilesWithImageResizer ()
@@ -25,6 +26,15 @@ namespace Imagingservice.Tests
         {
             const int numberOfLargeFiles = 4;
             var configuration = GetClientConfiguration(1, WpfImageProcessorType);
+            var successfullyProcessedFilesCount = new FileProcessor(configuration).Process();
+            Assert.Equal(numberOfLargeFiles, successfullyProcessedFilesCount);
+        }
+
+        [Fact]
+        public void SuccessfullyProcessLargeFilesWithLegacyImagingProcessor()
+        {
+            const int numberOfLargeFiles = 4;
+            var configuration = GetClientConfiguration(1, LegacyImagingProcessorType);
             var successfullyProcessedFilesCount = new FileProcessor(configuration).Process();
             Assert.Equal(numberOfLargeFiles, successfullyProcessedFilesCount);
         }
@@ -47,6 +57,15 @@ namespace Imagingservice.Tests
             Assert.Equal(numberOfWierdShapedFiles, successfullyProcessedFilesCount);
         }
 
+        [Fact(Skip = "Legacy processor doesn't handle images where width or hight is 1.")]
+        public void SuccessfullyProcessWierdShapedFilesWithLegacyImagingProcessor()
+        {
+            const int numberOfWierdShapedFiles = 3;
+            var configuration = GetClientConfiguration(2, LegacyImagingProcessorType);
+            var successfullyProcessedFilesCount = new FileProcessor(configuration).Process();
+            Assert.Equal(numberOfWierdShapedFiles, successfullyProcessedFilesCount);
+        }
+
         [Fact]
         public void SuccessfullyProcessLotsOfSmallImagesWithImageResizer()
         {
@@ -61,6 +80,15 @@ namespace Imagingservice.Tests
         {
             const int numberOfWierdShapedFiles = 1080;
             var configuration = GetClientConfiguration(3, WpfImageProcessorType);
+            var successfullyProcessedFilesCount = new FileProcessor(configuration).Process();
+            Assert.Equal(numberOfWierdShapedFiles, successfullyProcessedFilesCount);
+        }
+
+        [Fact(Skip = "Legacy processor doesn't handle images where width or hight is 1.")]
+        public void SuccessfullyProcessLotsOfSmallImagesWithLegacyImagingProcessorType()
+        {
+            const int numberOfWierdShapedFiles = 1080;
+            var configuration = GetClientConfiguration(3, LegacyImagingProcessorType);
             var successfullyProcessedFilesCount = new FileProcessor(configuration).Process();
             Assert.Equal(numberOfWierdShapedFiles, successfullyProcessedFilesCount);
         }
