@@ -13,7 +13,7 @@
 	
 	
 	<RemoveDir Directories="$(CodePath)" />
-	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(CodePath)\%(RecursiveDir)" />	
+	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(DeployPath)\%(RecursiveDir)" />	
 	
   </Target>
   
