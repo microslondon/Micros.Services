@@ -8,13 +8,13 @@ using ImagingService.Configuration;
 
 namespace ImagingService.ImageProcessing
 {
-    public class LegacyImagingProcessor : ImageProcessorBase
+    public class LegacyImageProcessor : ImageProcessorBase
     {
-         public LegacyImagingProcessor()
+         public LegacyImageProcessor()
         {
         }
 
-         public LegacyImagingProcessor(Image sourceImage, string sourceImagePath, ClientConfiguration clientConfiguration)
+         public LegacyImageProcessor(Image sourceImage, string sourceImagePath, ClientConfiguration clientConfiguration)
         {
             SourceImage = sourceImage;
             SourceImageFilePath = sourceImagePath;

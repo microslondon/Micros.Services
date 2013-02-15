@@ -10,7 +10,7 @@ namespace Imagingservice.Tests
     {
         private const string WpfImageProcessorType = "ImagingService.ImageProcessing.WpfImageProcessor, ImagingService";
         private const string ImageResizerImageProcessorType = "ImagingService.ImageProcessing.ImageResizerImageProcessor, ImagingService";
-        private const string LegacyImagingProcessorType = "ImagingService.ImageProcessing.LegacyImagingProcessor, ImagingService";
+        private const string LegacyImagingProcessorType = "ImagingService.ImageProcessing.LegacyImageProcessor, ImagingService";
 
         [Fact]
         public void SuccessfullyProcessLargeFilesWithImageResizer ()
