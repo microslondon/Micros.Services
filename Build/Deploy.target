@@ -4,14 +4,12 @@
   <Target Name="Deploy">  
   
 	<PropertyGroup>
-      <DeployPath>\\$(DeployServer)\Micros.Services</DeployPath>	  
+      <DeployPath>\\$(DeployServer)\Micros.Services\ImagingService.ConsoleApplication</DeployPath>	  
     </PropertyGroup>
 	
 	<ItemGroup>
-		<AppCode Include="$(CodePath)\**\*.*" />
-	</ItemGroup>
-	
-	
+		<AppCode Include="$(AppCodePath)\**\*.*" />
+	</ItemGroup>	
 	
 	<Copy SourceFiles="@(AppCode)" DestinationFolder="$(DeployPath)\%(RecursiveDir)" />	
 	

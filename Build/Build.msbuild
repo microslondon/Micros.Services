@@ -6,6 +6,7 @@
 		<BuildPath>$(BuildCommonPath)\..</BuildPath>
 		<ToolsPath>$(BuildCommonPath)\Tools</ToolsPath>
 		<CodePath>$(BuildPath)\ImagingService</CodePath>
+		<AppCodePath>$(CodePath)\ImagingService.ConsoleApplication\bin\Release</AppCodePath>
 		<MSBuildCommunityTasksPath>$(ToolsPath)\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
 	</PropertyGroup>
 	
